@@ -33,61 +33,60 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 LSS += \
-lcd_i2c.lss \
+TomatoBox2.lss \
 
 FLASH_IMAGE += \
-lcd_i2c.hex \
+TomatoBox2.hex \
 
 EEPROM_IMAGE += \
-lcd_i2c.eep \
+TomatoBox2.eep \
 
 SIZEDUMMY += \
 sizedummy \
 
 
 # All Target
-all: lcd_i2c.elf secondary-outputs
+all: TomatoBox2.elf secondary-outputs
 
 # Tool invocations
-lcd_i2c.elf: $(OBJS) $(USER_OBJS)
+TomatoBox2.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,lcd_i2c.map -mmcu=atmega328 -o "lcd_i2c.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,TomatoBox2.map -mmcu=atmega328p -o "TomatoBox2.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-lcd_i2c.lss: lcd_i2c.elf
+TomatoBox2.lss: TomatoBox2.elf
 	@echo 'Invoking: AVR Create Extended Listing'
-	-avr-objdump -h -S lcd_i2c.elf  >"lcd_i2c.lss"
+	-avr-objdump -h -S TomatoBox2.elf  >"TomatoBox2.lss"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-lcd_i2c.hex: lcd_i2c.elf
+TomatoBox2.hex: TomatoBox2.elf
 	@echo 'Create Flash image (ihex format)'
-	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex lcd_i2c.elf  "lcd_i2c.hex"
+	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex TomatoBox2.elf  "TomatoBox2.hex"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-lcd_i2c.eep: lcd_i2c.elf
+TomatoBox2.eep: TomatoBox2.elf
 	@echo 'Create eeprom image (ihex format)'
-	-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex lcd_i2c.elf  "lcd_i2c.eep"
+	-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex TomatoBox2.elf  "TomatoBox2.eep"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-sizedummy: lcd_i2c.elf
+sizedummy: TomatoBox2.elf
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega328 lcd_i2c.elf
+	-avr-size --format=avr --mcu=atmega328p TomatoBox2.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(EEPROM_IMAGE)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) lcd_i2c.elf
+	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(EEPROM_IMAGE)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) TomatoBox2.elf
 	-@echo ' '
 
 secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY)
 
 .PHONY: all clean dependents
-.SECONDARY:
 
 -include ../makefile.targets
